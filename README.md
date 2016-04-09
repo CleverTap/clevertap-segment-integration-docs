@@ -109,3 +109,60 @@ For an example of gating CleverTap functionality based on whether CleverTap Segm
 
 
 
+## iOS 
+
+### Integrating
+
+1. Add the Appboy Segment Pod to your Podfile:
+
+    `pod 'Segment-CleverTap'`
+
+    We recommend using the latest version on [CocoaPods](https://cocoapods.org/pods/Segment-CleverTap) since it will contain the most up to date features and bug fixes.
+
+2. Next, declare CleverTap's integration in your app delegate instance:
+
+    ```
+    SEGAnalyticsConfiguration *config = [SEGAnalyticsConfiguration configurationWithWriteKey:@"YOUR_WRITE_KEY_HERE"];
+    [config use:[SEGCleverTapIntegrationFactory instance]];
+    [SEGAnalytics setupWithConfiguration:config];
+    ```
+
+### Integrating Push     
+
+1. Follow the directions to register for push at: [https://segment.com/docs/libraries/ios/](https://segment.com/docs/libraries/ios/).
+
+2. In your application's application:didReceiveRemoteNotification: method, add the following:
+
+    `[[SEGAnalytics sharedAnalytics] receivedRemoteNotification:userInfo];`
+
+3. If you integrated the application:didReceiveRemoteNotification:fetchCompletionHandler: in your app, add the following to that method:
+
+    `[[SEGAnalytics sharedAnalytics] receivedRemoteNotification:userInfo];`
+
+4. If you implemented handleActionWithIdentifier:forRemoteNotification:, add the following to that method:
+
+    `[[SEGAnalytics sharedAnalytics] handleActionWithIdentifier:identifier forRemoteNotification:userInfo];`
+
+### In-App Notifications
+
+No further action is required to integrate in-app notifications, which are registered for and requested by default by our CleverTap Segment integration.
+
+### Sample App
+
+CleverTap has created a sample iOS application that integrates CleverTap via Segment. Check it out at the [Github repo](https://github.com/CleverTap/clevertap-segment-ios/tree/master/Example).
+
+### Non-Segment Functionality
+
+CleverTap functionality that isn't integrated with Segment is supported via the use of our standard iOS SDK API. For more information, visit our [documentation](https://support.clevertap.com/integration/ios-sdk/), and [Github repo](https://github.com/CleverTap/clevertap-ios-sdk).
+
+
+## Settings
+
+### CleverTapAccountID
+
+**For Bundled Integration Only**: The Account ID  found in your CleverTap dashboard, used to identify your application.
+
+### CleverTapAccountToken
+
+**For Bundled Integration Only**: The Account Token  found in your CleverTap dashboard, used to identify your application.
+
