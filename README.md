@@ -6,14 +6,14 @@ CleverTap supports the identify and track methods.
 
 ## Identify
 
-When you identify a user, we'll pass that user's information to CleverTap with userId as CleverTap's Identity value. Segment's special traits recognized as CleverTap's standard user profile fields (in parentheses) are:
+When you identify a user, we'll pass that user's information to CleverTap with userId as CleverTap's Identity value. A number of Segment's special traits map to CleverTap's standard user profile fields.  You’ll pass the key on the left into Segment and we will transform it to the key on the right before sending to CleverTap.
 
-- name (Name)
-- birthday (DOB)
-- avatar (photo)
-- gender (Gender)
-- phone (Phone)
-- email (Email)
+- `name` maps to `Name`
+- `birthday` maps to `DOB`
+- `avatar` maps to `Photo`
+- `gender` maps to `Gender`
+- `phone` maps to `Phone`
+- `email` maps to `Email`
 
 All other traits will be sent to CleverTap as custom attributes.
 
@@ -31,7 +31,7 @@ When you track an event, we will send that event to CleverTap as a custom event.
 
     `compile 'com.clevertap.android:clevertap-segment-android:+'`
 
-    **Note**: Our group Id is com.clevertap.android and not com.segment.analytics.android.integrations.
+    **Note**: Our group Id is `com.clevertap.android`, not `com.segment.analytics.android.integrations`.
 
 2. Next, declare CleverTap's integration in your Analytics instance:
 
@@ -99,21 +99,11 @@ When you track an event, we will send that event to CleverTap as a custom event.
 
 CleverTap has created a sample Android application that integrates CleverTap via Segment. Check it out at the [Github repo](https://github.com/CleverTap/clevertap-segment-android-example).
 
-### Non-Segment Functionality
-
-CleverTap functionality that isn't integrated with Segment is supported via the use of our standard Android SDK API. For more information, visit our [documentation](https://support.clevertap.com/integration/android-sdk/), and [Github repo](https://github.com/CleverTap/clevertap-android-sdk).
-
-Note that you should gate CleverTap functionality that is accessed directly via CleverTap API methods based on whether the Segment CleverTap integration is active and enabled. That way, when CleverTap is turned off via Segment, all CleverTap functionality is turned off.
-
-For an example of gating CleverTap functionality based on whether CleverTap Segment is enabled, see our [example application class](https://github.com/CleverTap/clevertap-segment-android-example/blob/master/app/src/main/java/com/clevertap/segmenttest/CleverTapSegmentApplication.java), which stores the enabled state.
-
-
-
 ## iOS 
 
 ### Integrating
 
-1. Add the Appboy Segment Pod to your Podfile:
+1. Add the CleverTap Segment Pod to your Podfile:
 
     `pod 'Segment-CleverTap'`
 
@@ -129,7 +119,7 @@ For an example of gating CleverTap functionality based on whether CleverTap Segm
 
 ### Integrating Push     
 
-1. Follow the directions to register for push at: [https://segment.com/docs/libraries/ios/](https://segment.com/docs/libraries/ios/).
+1. Follow the directions to register for push at: [https://segment.com/docs/libraries/ios/#how-do-i-use-push-notifications-](https://segment.com/docs/libraries/ios/#how-do-i-use-push-notifications-).
 
 2. In your application's application:didReceiveRemoteNotification: method, add the following:
 
@@ -151,11 +141,6 @@ No further action is required to integrate in-app notifications, which are regis
 
 CleverTap has created a sample iOS application that integrates CleverTap via Segment. Check it out at the [Github repo](https://github.com/CleverTap/clevertap-segment-ios/tree/master/Example).
 
-### Non-Segment Functionality
-
-CleverTap functionality that isn't integrated with Segment is supported via the use of our standard iOS SDK API. For more information, visit our [documentation](https://support.clevertap.com/integration/ios-sdk/), and [Github repo](https://github.com/CleverTap/clevertap-ios-sdk).
-
-
 ## Settings
 
 ### CleverTapAccountID
@@ -165,4 +150,3 @@ CleverTap functionality that isn't integrated with Segment is supported via the 
 ### CleverTapAccountToken
 
 **For Bundled Integration Only**: The Account Token  found in your CleverTap dashboard, used to identify your application.
-
