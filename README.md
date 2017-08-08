@@ -2,7 +2,12 @@
 
 Once the Segment library is integrated, toggle CleverTap on in your Segment integrations, and add your CleverTap Account ID and CleverTap Account Token which you can find in the CleverTap Dashboard under Settings.
 
-CleverTap supports the identify and track methods.
+You can integrate CleverTap via a server-side or mobile destination (iOS or Andriod). If you are interested in using CleverTap’s push notifications or in-app notifications products, you should use the mobile destinations.
+
+All server-side destination requests require either a Segment Anonymous ID or a userId in the payload.
+
+CleverTap supports the `identify`, `track`, `page` (server-side only), and `screen` (iOS and server-side only) methods.
+
 
 ## Identify
 
@@ -17,11 +22,21 @@ When you identify a user, we'll pass that user's information to CleverTap with u
 
 All other traits will be sent to CleverTap as custom attributes.
 
-
 ## Track
 
-When you track an event, we will send that event to CleverTap as a custom event.
+When you `track` an event, we will send that event to CleverTap as a custom event.  Note that CleverTap does not support arrays or nested objects for custom track event properties.
 
+### Order Completed
+
+When you `track` an event via the server-side destination with the name `Order Completed` using the [e-commerce tracking API](https://segment.com/docs/spec/ecommerce/v2/), we will map that event to CleverTap's [Charged](https://support.clevertap.com/docs/working-with-events.html#recording-customer-purchases) event.
+
+## Page
+
+When you send a `page` event via the server-side destination, we will send that event to CleverTap as a Web Page Viewed event.
+
+## Screen
+
+When you send a `screen` event via the server-side destination or the iOS bundled SDK, we will send that event to CleverTap as an App Screen Viewed event.
 
 ## Android
 
@@ -44,42 +59,25 @@ When you track an event, we will send that event to CleverTap as a custom event.
 
 ### Integrating Push     
 
-1. In your AndroidManifest.xml, add relevant permissions.  
+1. In your AndroidManifest.xml, register the following CleverTap services.  
 
     ```
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="[YOUR_PACKAGE_NAME].permission.C2D_MESSAGE" android:protectionLevel="signature"/>
-    <uses-permission android:name="[YOUR_PACKAGE_NAME].permission.C2D_MESSAGE" />
+    <service
+        android:name="com.clevertap.android.sdk.FcmTokenListenerService">
+        <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+    </service>
+    
+    <service
+        android:name="com.clevertap.android.sdk.FcmMessageListenerService">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+    </service>
     ```
-
-2. In your AndroidManifest.xml, register CleverTap's GcmBroadcastReceiver.  
-
-    ```
-    <receiver
-        android:name="com.clevertap.android.sdk.GcmBroadcastReceiver"
-        android:permission="com.google.android.c2dm.permission.SEND">  
-        <intent-filter>  
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />  
-            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />  
-            <category android:name="[YOUR_PACKAGE_NAME]" />  
-        </intent-filter>  
-    </receiver>`  
-    ```
-
-3. Inside the application tag of your AndroidManifest.xml, add your GCM Sender ID and google play services version.
-
-    ```
-    <meta-data  
-        android:name="GCM_SENDER_ID:    
-        android:value="id:YOUR_SENDER_ID" />  
-    ```    
-    ```
-    <meta-data  
-        android:name="com.google.android.gms.version"  
-        android:value="@integer/google_play_services_version" />    
-    ```
-
-4. For more in-depth information, visit our [Android push integration documentation](https://support.clevertap.com/integration/android-sdk/#push-notification-support).
+    
+2. For more in-depth information, visit our [Android push integration documentation](https://support.clevertap.com/integration/android-sdk/#push-notification-support).
 
 ### In-App Notifications
 
@@ -141,12 +139,18 @@ No further action is required to integrate in-app notifications, which are regis
 
 CleverTap has created a sample iOS application that integrates CleverTap via Segment. Check it out at the [Github repo](https://github.com/CleverTap/clevertap-segment-ios/tree/master/Example).
 
+## Server-Side Push Tokens
+
+If you chose not to bundle the CleverTap Mobile SDK, then you will have to implement your own Push Message processors (and you won’t have access to CleverTap’s In-App feature).
+
+If you decide to implement your own Push Message processors, then you can pass push tokens to CleverTap via the server-side destination. You can do this by sending it inside context.device.token.
+
 ## Settings
 
 ### CleverTapAccountID
 
-**For Bundled Integration Only**: The Account ID  found in your CleverTap dashboard, used to identify your application.
+The Account ID found in your CleverTap dashboard, used to identify your application.
 
 ### CleverTapAccountToken
 
-**For Bundled Integration Only**: The Account Token  found in your CleverTap dashboard, used to identify your application.
+**Mobile Only**: The Account Token  found in your CleverTap dashboard, used to identify your application.
